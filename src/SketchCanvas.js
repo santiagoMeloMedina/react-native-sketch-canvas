@@ -89,13 +89,17 @@ class SketchCanvas extends React.Component {
     this._size = { width: 0, height: 0 }
     this._initialized = false
 
-    this.state.text = this._processText(props.text ? props.text.map(t => Object.assign({}, t)) : null)
+    this.state.text = this._processText(props.text ? props.text.map(t => Object.assign({}, t)) : null);
+
+    this.componentWillMountForConstructor();
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      text: this._processText(nextProps.text ? nextProps.text.map(t => Object.assign({}, t)) : null)
-    })
+  componentDidUpdate(prevProps) {
+    if (this.state.text !== prevProps.text) {
+      this.setState({
+        text: this._processText(prevProps.text ? prevProps.text.map(t => Object.assign({}, t)) : null),
+      });
+    }
   }
 
   _processText(text) {
@@ -152,7 +156,7 @@ class SketchCanvas extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentWillMountForConstructor() {
     this.panResponder = PanResponder.create({
       // Ask to be the responder:
       onStartShouldSetPanResponder: (evt, gestureState) => true,
